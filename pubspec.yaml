@@ -52,6 +52,7 @@ dependencies:
   flutter_pdfview: ^1.2.7
   flutter_xlider: ^3.5.0
   awesome_notifications: ^0.9.3+1
+  webview_flutter: ^4.8.0
 
 dev_dependencies:
   build_runner:

@@ -10,6 +10,7 @@ import 'package:deutch_app/data/model/courses_args.dart';
 import 'package:deutch_app/ui/pages/books/book_page.dart';
 import 'package:deutch_app/ui/pages/books/pdf_page.dart';
 import 'package:deutch_app/ui/pages/course/course_page.dart';
+import 'package:deutch_app/ui/pages/game/game_webview_page.dart';
 import 'package:deutch_app/ui/pages/home/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,6 +55,9 @@ class RouteGenerator {
         ));
       case RoutePaths.pdf:
         return _createRoute(PdfPage(file: routeSettings.arguments as File));
+      case RoutePaths.game:
+        return _createRoute(
+            GameWebviewPage(src: routeSettings.arguments as String));
       default:
         return _createRoute(const SizedBox());
     }

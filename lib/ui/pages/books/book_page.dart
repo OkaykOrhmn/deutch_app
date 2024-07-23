@@ -333,6 +333,36 @@ class _BookPageState extends State<BookPage> {
                             ),
                           );
                         }),
+                    SizedBox(
+                      width: double.infinity,
+                      child: InkWell(
+                        onTap: () => Navigator.of(context).pushNamed(
+                            RoutePaths.game,
+                            arguments: book.game.toString()),
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          margin: const EdgeInsets.all(24),
+                          decoration: BoxDecoration(
+                              borderRadius: DesignConfig.mediumBorderRadius,
+                              color: Color(int.parse(book.color.toString()))),
+                          child: Column(
+                            children: [
+                              const Icon(
+                                Icons.games_rounded,
+                                size: 24,
+                              ),
+                              const SizedBox(
+                                height: 12,
+                              ),
+                              Text(
+                                "Practice",
+                                style: Theme.of(context).textTheme.titleBold,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                     const SizedBox(
                       height: 72,
                     ),

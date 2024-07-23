@@ -11,6 +11,7 @@ class BooksModel {
   String? arbeitsbuch;
   String? kursbuchAntwortblatt;
   String? arbeitsbuchAntwortblatt;
+  String? game;
   List<CoursesModel>? courses;
 
   BooksModel({this.id, this.name, this.imageUrl, this.color, this.courses});
@@ -25,6 +26,7 @@ class BooksModel {
     arbeitsbuch = json['arbeitsbuch'];
     kursbuchAntwortblatt = json['kursbuchAn'];
     arbeitsbuchAntwortblatt = json['arbeitsbuchAn'];
+    game = json['game'];
     description = json['description'] ?? '';
     if (json['courses'] != null) {
       courses = <CoursesModel>[];
@@ -46,6 +48,7 @@ class BooksModel {
     data['arbeitsbuch'] = arbeitsbuch;
     data['kursbuchAn'] = kursbuchAntwortblatt;
     data['arbeitsbuchAn'] = arbeitsbuchAntwortblatt;
+    data['game'] = game;
     if (courses != null) {
       data['courses'] = courses!.map((v) => v.toJson()).toList();
     }
