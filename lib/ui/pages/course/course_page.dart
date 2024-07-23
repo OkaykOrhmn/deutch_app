@@ -290,31 +290,30 @@ class _CoursePageState extends State<CoursePage> {
                   shrinkWrap: true,
                   physics: const BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
-                    return Container(
-                        decoration: BoxDecoration(
-                          borderRadius: DesignConfig.mediumBorderRadius,
-                          boxShadow: DesignConfig.defaultShadow(context),
-                          color: Color(
-                                  int.parse(widget.booksModel.color.toString()))
-                              .withOpacity(0.4),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 12),
-                        margin: const EdgeInsets.symmetric(vertical: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(Tools.getAudioName(audios[index])),
-                            InkWell(
-                              onTap: () {
-                                context.read<AudioBloc>().add(GetAudio(
-                                      url: ApiEndPoints.baseStorageURL +
-                                          audios[index],
-                                      booksModel: widget.booksModel,
-                                      coursesModel: course,
-                                    ));
-                              },
-                              child: AudioBloc.url ==
+                    return InkWell(
+                      onTap: () {
+                        context.read<AudioBloc>().add(GetAudio(
+                              url: ApiEndPoints.baseStorageURL + audios[index],
+                              booksModel: widget.booksModel,
+                              coursesModel: course,
+                            ));
+                      },
+                      child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: DesignConfig.mediumBorderRadius,
+                            boxShadow: DesignConfig.defaultShadow(context),
+                            color: Color(int.parse(
+                                    widget.booksModel.color.toString()))
+                                .withOpacity(0.4),
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 12),
+                          margin: const EdgeInsets.symmetric(vertical: 8),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(Tools.getAudioName(audios[index])),
+                              AudioBloc.url ==
                                       ApiEndPoints.baseStorageURL +
                                           audios[index].toString()
                                   ? AudioBloc.audioPlayer.state ==
@@ -327,10 +326,10 @@ class _CoursePageState extends State<CoursePage> {
                                   : const Icon(
                                       CupertinoIcons.play_arrow_solid,
                                       size: 18,
-                                    ),
-                            )
-                          ],
-                        ));
+                                    )
+                            ],
+                          )),
+                    );
                   },
                 ),
               ),

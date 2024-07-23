@@ -7,6 +7,10 @@ class BooksModel {
   String? color;
   String? description;
   String? level;
+  String? kursbuch;
+  String? arbeitsbuch;
+  String? kursbuchAntwortblatt;
+  String? arbeitsbuchAntwortblatt;
   List<CoursesModel>? courses;
 
   BooksModel({this.id, this.name, this.imageUrl, this.color, this.courses});
@@ -17,6 +21,10 @@ class BooksModel {
     imageUrl = json['imageUrl'];
     color = json['color'];
     level = json['level'];
+    kursbuch = json['kursbuch'];
+    arbeitsbuch = json['arbeitsbuch'];
+    kursbuchAntwortblatt = json['kursbuchAn'];
+    arbeitsbuchAntwortblatt = json['arbeitsbuchAn'];
     description = json['description'] ?? '';
     if (json['courses'] != null) {
       courses = <CoursesModel>[];
@@ -34,6 +42,10 @@ class BooksModel {
     data['color'] = color;
     data['description'] = description;
     data['level'] = level;
+    data['kursbuch'] = kursbuch;
+    data['arbeitsbuch'] = arbeitsbuch;
+    data['kursbuchAn'] = kursbuchAntwortblatt;
+    data['arbeitsbuchAn'] = arbeitsbuchAntwortblatt;
     if (courses != null) {
       data['courses'] = courses!.map((v) => v.toJson()).toList();
     }

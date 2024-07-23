@@ -2,6 +2,7 @@ import 'package:deutch_app/core/bloc/audio/audio_bloc.dart';
 import 'package:deutch_app/core/bloc/download/bloc/download_bloc.dart';
 import 'package:deutch_app/core/routes/route_generator.dart';
 import 'package:deutch_app/core/routes/route_paths.dart';
+import 'package:deutch_app/core/services/notification_service.dart';
 import 'package:deutch_app/ui/theme/bloc/theme_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -14,10 +15,9 @@ final ValueNotifier<bool> isShowPlayer = ValueNotifier<bool>(false);
 bool isDarkTheme =
     SchedulerBinding.instance.platformDispatcher.platformBrightness ==
         Brightness.dark;
-void main() {
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarBrightness: Brightness.light,
-      statusBarIconBrightness: Brightness.light));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService.initializeNotification();
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider<ThemeBloc>(
@@ -46,6 +46,7 @@ class MyApp extends StatelessWidget {
     return BlocBuilder<ThemeBloc, ThemeData>(
       builder: (context, state) {
         return MaterialApp(
+          navigatorKey: navigatorKey,
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
               useMaterial3: true,

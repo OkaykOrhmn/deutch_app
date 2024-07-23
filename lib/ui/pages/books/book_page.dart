@@ -41,29 +41,6 @@ class _BookPageState extends State<BookPage> {
     super.initState();
   }
 
-  List<BtnModel> btns = [
-    BtnModel(
-        name: 'Kursbuch',
-        url:
-            '${ApiEndPoints.baseStorageURL}deutch/a11-bucher/Menschen%20A1.1%20Kursbuch.pdf',
-        icon: Icons.menu_book_rounded),
-    BtnModel(
-        name: 'Arbeitsbuch',
-        url:
-            '${ApiEndPoints.baseStorageURL}deutch/a11-bucher/Menschen%20A1.1%20Arbeitsbuch.pdf',
-        icon: CupertinoIcons.book),
-    BtnModel(
-        name: 'Kursbuch Antwortblatt',
-        url:
-            '${ApiEndPoints.baseStorageURL}deutch/a11-bucher/Menschen%20A1.1%20Kursbuch%20Antwortblatt.pdf',
-        icon: Icons.my_library_books),
-    BtnModel(
-        name: 'Arbeitsbuc. Antwortblatt',
-        url:
-            '${ApiEndPoints.baseStorageURL}deutch/a11-bucher/Menschen%20A1.1%20Arbeitsbuch%20Antwortblatt.pdf',
-        icon: Icons.my_library_books_outlined),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,6 +49,26 @@ class _BookPageState extends State<BookPage> {
         builder: (context, state) {
           if (state is BookSuccess) {
             final book = state.response;
+            List<BtnModel> btns = [
+              BtnModel(
+                  name: 'Kursbuch',
+                  url: '${ApiEndPoints.baseStorageURL}${book.kursbuch}',
+                  icon: Icons.menu_book_rounded),
+              BtnModel(
+                  name: 'Arbeitsbuch',
+                  url: '${ApiEndPoints.baseStorageURL}${book.arbeitsbuch}',
+                  icon: CupertinoIcons.book),
+              BtnModel(
+                  name: 'Kursbuch Antwortblatt',
+                  url:
+                      '${ApiEndPoints.baseStorageURL}${book.kursbuchAntwortblatt}',
+                  icon: Icons.my_library_books),
+              BtnModel(
+                  name: 'Arbeitsbuch Antwortblatt',
+                  url:
+                      '${ApiEndPoints.baseStorageURL}${book.arbeitsbuchAntwortblatt}',
+                  icon: Icons.my_library_books_outlined),
+            ];
             return AnnotatedRegion(
               value: Tools.customeStatusBar(
                   context: context,
@@ -257,82 +254,15 @@ class _BookPageState extends State<BookPage> {
                       builder: (context, state) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                          child: Flex(
-                            direction: Axis.horizontal,
-                            children: List.generate(
-                              btns.length,
-                              (index) => Flexible(
-                                  flex: 1,
-                                  child: AspectRatio(
-                                    aspectRatio: 1 / 1,
-                                    child: InkWell(
-                                      onTap: state is DownloadLoading
-                                          ? null
-                                          : () async {
-                                              context.read<DownloadBloc>().add(
-                                                      DownloadMedia(
-                                                          url: btns[index].url,
-                                                          names: [
-                                                        book.name.toString(),
-                                                        Tools
-                                                            .getDownloadedFileName(
-                                                                btns[index].url)
-                                                      ]));
-                                            },
-                                      child: Container(
-                                        padding: const EdgeInsets.all(8),
-                                        margin: const EdgeInsets.all(8),
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                            color: Color(int.parse(
-                                                book.color.toString())),
-                                            borderRadius:
-                                                DesignConfig.mediumBorderRadius,
-                                            boxShadow:
-                                                DesignConfig.defaultShadow(
-                                                    context)),
-                                        child: Stack(
-                                          children: [
-                                            Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(btns[index].icon),
-                                                Text(
-                                                  btns[index].name,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .tiny,
-                                                  textAlign: TextAlign.center,
-                                                  maxLines: index >= 2 ? 2 : 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                ),
-                                              ],
-                                            ),
-                                            state is DownloadLoading &&
-                                                    DownloadBloc.url ==
-                                                        btns[index].url
-                                                ? Positioned.fill(
-                                                    child: Container(
-                                                    decoration: BoxDecoration(
-                                                        color: Color(int.parse(
-                                                                book.color
-                                                                    .toString()))
-                                                            .withOpacity(0.8)),
-                                                    child: Center(
-                                                      child:
-                                                          CircularProgressIndicator(
-                                                        value: state.pr,
-                                                      ),
-                                                    ),
-                                                  ))
-                                                : const SizedBox()
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  )),
+                          child: SizedBox(
+                            height: MediaQuery.sizeOf(context).width / 4,
+                            child: ListView.builder(
+                              itemCount: btns.length,
+                              physics: const BouncingScrollPhysics(),
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) => cardBtnBuxh(
+                                  state, context, index, book, btns),
                             ),
                           ),
                         );
@@ -379,12 +309,19 @@ class _BookPageState extends State<BookPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    '${course.chapter.toString()} ${course.name.toString()}',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .title
-                                        .copyWith(color: Colors.white),
+                                  Expanded(
+                                    child: Text(
+                                      '${course.chapter ?? ''} ${course.name.toString()}',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .title
+                                          .copyWith(color: Colors.white),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 8,
                                   ),
                                   const Icon(
                                     CupertinoIcons.forward,
@@ -412,6 +349,82 @@ class _BookPageState extends State<BookPage> {
         },
       ),
       bottomSheet: const PlayerNavbar(),
+    );
+  }
+
+  Widget cardBtnBuxh(DownloadState state, BuildContext context, int index,
+      BooksModel book, List<BtnModel> btns) {
+    return InkWell(
+      onTap: state is DownloadLoading
+          ? null
+          : () async {
+              context
+                  .read<DownloadBloc>()
+                  .add(DownloadMedia(url: btns[index].url, names: [
+                    book.name.toString(),
+                  ]));
+            },
+      child: AspectRatio(
+        aspectRatio: 1 / 1,
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          margin: const EdgeInsets.all(8),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              color: Color(int.parse(book.color.toString())),
+              borderRadius: DesignConfig.mediumBorderRadius,
+              boxShadow: DesignConfig.defaultShadow(context)),
+          child: Stack(
+            children: [
+              state is DownloadLoading && DownloadBloc.url == btns[index].url
+                  ? const Icon(
+                      Icons.file_download_rounded,
+                      size: 72,
+                    )
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(btns[index].icon),
+                        Text(
+                          btns[index].name,
+                          style: Theme.of(context).textTheme.tiny,
+                          textAlign: TextAlign.center,
+                          maxLines: index >= 2 ? 2 : 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+              state is DownloadLoading && DownloadBloc.url == btns[index].url
+                  ? Positioned.fill(
+                      child: Container(
+                      decoration: BoxDecoration(
+                          color: Color(int.parse(book.color.toString()))
+                              .withOpacity(0.8)),
+                      padding: const EdgeInsets.all(12),
+                      child: Center(
+                        child: Stack(
+                          children: [
+                            Positioned.fill(
+                              child: CircularProgressIndicator(
+                                value: state.pr / 10,
+                                backgroundColor: Colors.white,
+                                color:
+                                    Theme.of(context).scaffoldBackgroundColor,
+                              ),
+                            ),
+                            Positioned.fill(
+                                child: Center(
+                              child: Text('${(state.pr * 10).round()}%'),
+                            ))
+                          ],
+                        ),
+                      ),
+                    ))
+                  : const SizedBox()
+            ],
+          ),
+        ),
+      ),
     );
   }
 

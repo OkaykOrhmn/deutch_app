@@ -1,4 +1,8 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:deutch_app/core/services/notification_service.dart';
+import 'package:deutch_app/core/utils/tools.dart';
+import 'package:deutch_app/data/model/audio_notification_model.dart';
 import 'package:deutch_app/data/model/books_model.dart';
 import 'package:deutch_app/data/model/courses_model.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +31,42 @@ class AudioBloc extends Bloc<AudioEvent, AudioState> {
           url = event.url;
           booksModel = event.booksModel;
           coursesModel = event.coursesModel;
+
+          audioPlayer.onDurationChanged.listen((event) {});
+
+          audioPlayer.onPlayerStateChanged.listen((event) async {
+            NotificationPlayState playState = NotificationPlayState.none;
+            switch (event) {
+              case PlayerState.playing:
+                playState = NotificationPlayState.playing;
+                break;
+              case PlayerState.completed:
+              case PlayerState.paused:
+                playState = NotificationPlayState.paused;
+                break;
+              case PlayerState.disposed:
+              case PlayerState.stopped:
+                playState = NotificationPlayState.stopped;
+                break;
+            }
+            NotificationService.updateNotificationMediaPlayer(
+                AudioNotificationModel(
+                    id: 100,
+                    progress: 0,
+                    title: Tools.getAudioName(url),
+                    body: coursesModel.name.toString(),
+                    summary: 'summary',
+                    payload: {
+                      'navigatie': 'true',
+                      'id': coursesModel.id.toString(),
+                      'bookId': coursesModel.bookId.toString(),
+                    }),
+                audioPlayer,
+                await audioPlayer.getCurrentPosition() ?? Duration.zero,
+                duration!,
+                playState);
+          });
+
           emit(AudioSuccess());
         } catch (e) {
           emit(AudioFail());

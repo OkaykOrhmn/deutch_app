@@ -19,7 +19,7 @@ class CoursesModel {
     bookId = json['bookId'];
     name = json['name'];
     chapter = json['chapter'];
-    description = json['description'];
+    description = json['description'] ?? '';
     audiosUrl = json['audiosUrl'];
   }
 

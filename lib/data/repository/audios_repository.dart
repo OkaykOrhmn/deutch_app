@@ -16,7 +16,7 @@ class AudiosRepository implements Audioss {
       required final String url}) async {
     try {
       Response response = await dioHelper.sendRequest.post(
-          "${ApiEndPoints.baseURL}${ApiEndPoints.books}/$courseId${ApiEndPoints.courses}/$courseId${ApiEndPoints.audios}",
+          "${ApiEndPoints.baseURL}${ApiEndPoints.books}/$bookId${ApiEndPoints.courses}/$courseId${ApiEndPoints.audios}",
           data: {"url": url});
       return AudiosModel.fromJson(response.data);
     } catch (ex) {
